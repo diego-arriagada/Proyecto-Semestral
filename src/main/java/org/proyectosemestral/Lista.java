@@ -1,4 +1,5 @@
 package org.proyectosemestral;
+import java.lang.classfile.attribute.MethodParameterInfo;
 import java.util.ArrayList;
 
 public class Lista<Participante>{
@@ -9,11 +10,13 @@ public class Lista<Participante>{
     }
     public void añadirParticipante(Participante p){
         if(p!=null){
-        lista.add(p);
+            if(lista.contains(p)){
+                //error
+            }else{
+                lista.add(p);
+            }
         }
-        if(lista.contains(p)){
-            //error
-        }
+
     }
     public void eliminarParticipante(Participante p){
         if(lista.contains(p)){
@@ -21,5 +24,11 @@ public class Lista<Participante>{
         }else{
             //error
         }
+    }
+    public ArrayList<Participante> getLista(){
+        return lista;
+    }
+    public Boolean buscarParticipante(Participante p){
+        return lista.contains(p);
     }
 }
