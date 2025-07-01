@@ -10,8 +10,9 @@ public class ComportamientoBracket implements ComportamientoTorneo {
     public ComportamientoBracket(){}
 
     @Override
-    public ArrayList generarPartidos(Lista<Participante> lista){
+    public int[][] generarPartidos(Lista<Participante> lista){
 
+        return null;
     }
 
     @Override

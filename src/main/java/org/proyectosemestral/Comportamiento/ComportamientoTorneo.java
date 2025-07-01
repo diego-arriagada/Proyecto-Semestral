@@ -8,6 +8,6 @@ import org.proyectosemestral.Participante;
 import java.util.ArrayList;
 
 public interface ComportamientoTorneo {
-    ArrayList generarPartidos(Lista<Participante> lista);
+    int [][] generarPartidos(Lista<Participante> lista);
     void calcularResultado();
 }

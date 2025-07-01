@@ -14,12 +14,13 @@ public class Torneo{
         listaParticipantes = new Lista();
     }
 
-    public void generarPartidos(){
+    public int[][] generarPartidos(){
         if(iniciado) {
-            comportamiento.generarPartidos(listaParticipantes);
+            return comportamiento.generarPartidos(listaParticipantes);
         }
         else{
             //torneo no iniciado
+            return null;
         }
     }
 
