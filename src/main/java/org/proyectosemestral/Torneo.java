@@ -1,31 +1,33 @@
 package org.proyectosemestral;
 
-public abstract class Torneo{
+import org.proyectosemestral.Comportamiento.ComportamientoTorneo;
+
+public class Torneo{
+    private String nombreTorneo;
+    private ComportamientoTorneo comportamiento;
     private Boolean iniciado;
     private Lista<Participante> listaParticipantes;
-    int tipo = 0;
-    public Torneo(int tipo){
-        this.tipo = tipo;
+    public Torneo(String nombreTorneo,ComportamientoTorneo comportamiento){
+        this.nombreTorneo = nombreTorneo;
+        this.comportamiento = comportamiento;
         this.iniciado = false;
         listaParticipantes = new Lista();
     }
 
-    public void añadirParticipante(Participante p){
-        if(iniciado!=true){
-            if (p != null) {
-                if (tipo == 1 && p instanceof Jugador) {
-                    listaParticipantes.añadirParticipante(p);
-                }
-                if (tipo == 2 && p instanceof Equipo) {
-                    listaParticipantes.añadirParticipante(p);
-                } else {
-                    //error participante nulo o tipo de torneo equivocado
-                }
-            }
-        }else{
-            //error torneo ya iniciado
+    public void generarPartidos(){
+        if(iniciado) {
+            comportamiento.generarPartidos(listaParticipantes);
+        }
+        else{
+            //torneo no iniciado
         }
     }
+
+
+    public void añadirParticipante(Participante p){
+        listaParticipantes.añadirParticipante(p);
+    }
+
     public void eliminarParticipante(Participante p){
         if(iniciado!=true) {
             if (p != null && listaParticipantes.getLista().contains(p)) {
@@ -37,6 +39,7 @@ public abstract class Torneo{
             //error torneo ya iniciado
         }
     }
+
     public void iniciarTorneo(){
         if(iniciado == false){
             this.iniciado = true;
@@ -44,12 +47,15 @@ public abstract class Torneo{
             //error torneo ya iniciado
         }
     }
+
     public Boolean buscarParticipante(Participante p){
         return listaParticipantes.buscarParticipante(p);
     }
+
     public Lista<Participante> getListaParticipantes(){
         return listaParticipantes;
     }
+
     public int tamañoLista(){
         return listaParticipantes.getLista().size();
     }
