@@ -38,19 +38,19 @@ public class Stats{
     public int getPuntos(){
         return puntos;
     }
-    public int setPartidosJugados(){
+    public int getPartidosJugados(){
         return partidosJugados;
     }
-    public int setVictorias(){
+    public int getVictorias(){
         return victorias;
     }
-    public int setDerrotas(){
+    public int getDerrotas(){
         return derrotas;
     }
-    public int setEmpates(){
+    public int getEmpates(){
         return empates;
     }
-    public int setGoles(){
+    public int getGoles(){
         return goles;
     }
 

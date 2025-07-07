@@ -1,9 +1,8 @@
 package org.proyectosemestral.Fabricas;
 
 import org.proyectosemestral.Comportamiento.ComportamientoLiga;
+import org.proyectosemestral.Decoradores.ParticipanteBracket;
 import org.proyectosemestral.Decoradores.ParticipanteLiga;
-import org.proyectosemestral.Equipo;
-import org.proyectosemestral.Jugador;
 import org.proyectosemestral.Participante;
 import org.proyectosemestral.Torneo;
 
@@ -15,13 +14,10 @@ public class FabricaLiga implements FabricaTorneo {
     }
 
     @Override
-    public Participante crearParticipante(String nombre,String correo,String numero,Boolean esJugador){
+    public Participante crearParticipante(String nombre,String correo,String numero){
         Participante participante;
-        if(esJugador){
-            participante = new Jugador(nombre,correo,numero);
-        }else{
-            participante = new Equipo(nombre,correo,numero);
-        }
+        participante = new Participante(nombre,correo,numero);
+
         return new ParticipanteLiga(participante);
     }
 }

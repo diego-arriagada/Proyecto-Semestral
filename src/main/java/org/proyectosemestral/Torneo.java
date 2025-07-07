@@ -2,31 +2,53 @@ package org.proyectosemestral;
 
 import org.proyectosemestral.Comportamiento.ComportamientoTorneo;
 
+import javax.swing.table.DefaultTableModel;
+import java.util.ArrayList;
+
 public class Torneo{
     private String nombreTorneo;
     private ComportamientoTorneo comportamiento;
     private Boolean iniciado;
+    private Boolean partidosGenerados;
     private Lista<Participante> listaParticipantes;
+    private ArrayList<Partido> partidos;
+    private int partidoActual;
+    private DefaultTableModel modeloTabla;
+
     public Torneo(String nombreTorneo,ComportamientoTorneo comportamiento){
         this.nombreTorneo = nombreTorneo;
         this.comportamiento = comportamiento;
         this.iniciado = false;
+        this.partidosGenerados = false;
+        this.partidoActual = 0;
         listaParticipantes = new Lista();
     }
 
-    public int[][] generarPartidos(){
-        if(iniciado) {
-            return comportamiento.generarPartidos(listaParticipantes);
+    public void generarPartidos(){
+        if(iniciado && !partidosGenerados) {
+            partidos = comportamiento.generarPartidos(listaParticipantes,partidos);
+            this.partidosGenerados = true;
         }
         else{
             //torneo no iniciado
-            return null;
+        }
+    }
+    public void jugarPartidoSiguiente(){
+        if(iniciado){
+            comportamiento.jugarPartidoSiguiente(partidos,partidoActual);
         }
     }
 
 
-    public void añadirParticipante(Participante p){
-        listaParticipantes.añadirParticipante(p);
+
+    public Boolean añadirParticipante(Participante p){
+        if(!iniciado){
+            listaParticipantes.añadirParticipante(p);
+            return true;
+        }else{
+            return false;
+        }
+
     }
 
     public void eliminarParticipante(Participante p){
@@ -41,13 +63,15 @@ public class Torneo{
         }
     }
 
-    public void iniciarTorneo(){
-        if(iniciado == false){
-            this.iniciado = true;
+    public boolean iniciarTorneo() {
+        if (iniciado) {
+            return false;
         }else{
-            //error torneo ya iniciado
+        this.iniciado = true;
+        return true;
         }
     }
+
 
     public Boolean buscarParticipante(Participante p){
         return listaParticipantes.buscarParticipante(p);
@@ -67,6 +91,25 @@ public class Torneo{
         }else{
             //error no puedes limpiar lista de torneo ya iniciado
         }
+    }
+    public ComportamientoTorneo getComportamiento(){
+        return comportamiento;
+    }
+
+    public Boolean getIniciado() {
+        return iniciado;
+    }
+
+    @Override
+    public String toString(){
+        return nombreTorneo;
+    }
+
+    public void setModeloTabla(DefaultTableModel modeloTabla) {
+        this.modeloTabla = modeloTabla;
+    }
+    public DefaultTableModel getModeloTabla(){
+        return modeloTabla;
     }
 }
 

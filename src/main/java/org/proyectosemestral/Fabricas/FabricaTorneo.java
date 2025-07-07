@@ -7,5 +7,5 @@ import org.proyectosemestral.Torneo;
 
 public interface FabricaTorneo {
     Torneo crearTorneo(String nombre);
-    Participante crearParticipante(String nombre,String correo,String numero,Boolean esJugador);
+    Participante crearParticipante(String nombre,String correo,String numero);
 }

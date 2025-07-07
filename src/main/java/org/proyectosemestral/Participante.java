@@ -1,7 +1,7 @@
 package org.proyectosemestral;
 import java.util.ArrayList;
 
-public abstract class Participante{;
+public class Participante{;
     private String nombre;
     private String correo;
     private String numero;
