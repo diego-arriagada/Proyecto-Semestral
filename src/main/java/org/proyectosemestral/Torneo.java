@@ -26,16 +26,18 @@ public class Torneo{
 
     public void generarPartidos(){
         if(iniciado && !partidosGenerados) {
-            partidos = comportamiento.generarPartidos(listaParticipantes,partidos);
+            ArrayList<Partido> partidos = new ArrayList<>();
+            this.partidos = comportamiento.generarPartidos(listaParticipantes,partidos);
             this.partidosGenerados = true;
         }
         else{
             //torneo no iniciado
         }
     }
-    public void jugarPartidoSiguiente(){
+    public void jugarPartidoSiguiente(int resultado1, int resultado2){
         if(iniciado){
-            comportamiento.jugarPartidoSiguiente(partidos,partidoActual);
+            comportamiento.jugarPartidoSiguiente(partidos,partidoActual,resultado1,resultado2);
+            this.partidoActual++;
         }
     }
 
@@ -111,6 +113,16 @@ public class Torneo{
     public DefaultTableModel getModeloTabla(){
         return modeloTabla;
     }
+
+    public int getPartidoActual(){
+        return partidoActual;
+    }
+
+    public ArrayList<Partido> getPartidos(){
+        return partidos;
+    }
 }
+
+
 
 

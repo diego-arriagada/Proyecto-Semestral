@@ -17,5 +17,5 @@ public class ComportamientoBracket implements ComportamientoTorneo {
     }
 
     @Override
-    public void jugarPartidoSiguiente(ArrayList<Partido> partidos,int partidoSiguiente){}
+    public void jugarPartidoSiguiente(ArrayList<Partido> partidos,int partidoSiguiente,int resultado1,int resultado2){}
 }

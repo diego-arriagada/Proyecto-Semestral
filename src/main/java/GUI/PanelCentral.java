@@ -3,6 +3,7 @@ package GUI;
 import org.proyectosemestral.Comportamiento.ComportamientoTorneo;
 import org.proyectosemestral.Comportamiento.ComportamientoLiga;
 import org.proyectosemestral.Comportamiento.ComportamientoBracket;
+import org.proyectosemestral.Decoradores.ParticipanteLiga;
 import org.proyectosemestral.Participante;
 import org.proyectosemestral.Torneo;
 
@@ -85,11 +86,36 @@ public class PanelCentral extends JPanel {
 
         // Agrega los participantes actuales
         for (Participante p : torneo.getListaParticipantes().getLista()) {
-            Object[] fila = {p.getNombre(), p.getCorreo(), p.getNumero()};
-            modelo.addRow(fila);
+            if(p instanceof ParticipanteLiga){
+                ParticipanteLiga pL = (ParticipanteLiga)p;
+                Object[] fila = {pL.getNombre(), pL.getStats().getPuntos(), pL.getStats().getPartidosJugados()};
+                modelo.addRow(fila);
+            }
+
         }
         this.torneoActual.setModeloTabla(modelo);
         return modelo;
+    }
+    public void actualizarTablaLiga(Torneo torneo) {
+        DefaultTableModel modelo = (DefaultTableModel) getTabla().getModel();
+        // Limpia la tabla antes de llenarla de nuevo
+        modelo.setRowCount(0);
+
+        for (Participante p : torneo.getListaParticipantes().getLista()) {
+            if (p instanceof ParticipanteLiga) {
+                ParticipanteLiga pl = (ParticipanteLiga) p;
+                Object[] fila = {
+                        pl.getNombre(),
+                        pl.getStats().getPuntos(),
+                        pl.getStats().getPartidosJugados()
+                };
+                modelo.addRow(fila);
+            } else {
+                // Si el participante no es de tipo Liga, muestra solo datos básicos
+                Object[] fila = {p.getNombre(), "-", "-"};
+                modelo.addRow(fila);
+            }
+        }
     }
 
     private JTable crearTablaCalendario() {

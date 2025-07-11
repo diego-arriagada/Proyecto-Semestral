@@ -6,6 +6,7 @@ import org.proyectosemestral.Comportamiento.ComportamientoBracket;
 import org.proyectosemestral.Decoradores.ParticipanteLiga;
 import org.proyectosemestral.Fabricas.FabricaTorneo;
 import org.proyectosemestral.Participante;
+import org.proyectosemestral.Partido;
 import org.proyectosemestral.Stats;
 import org.proyectosemestral.Torneo;
 
@@ -22,7 +23,7 @@ public class PanelBotones extends JPanel {
     private JButton btnAñadirParticipante;
     private JButton btnEliminarParticipante;
     private JButton btnComenzarTorneo;
-    private JButton btnReporte;
+    private JButton btnSiguientePartido;
     private JToggleButton btnCambiarVista;
     private Torneo torneoActual;
     private FabricaTorneo fabricaTorneo;
@@ -45,8 +46,8 @@ public class PanelBotones extends JPanel {
         btnComenzarTorneo = new JButton("Comenzar torneo");
         btnComenzarTorneo.setToolTipText("Inicia el torneo(Esto bloqueara la lista de participantes)");
 
-        btnReporte = new JButton("Reporte");
-        btnReporte.setToolTipText("Generar reporte del torneo");
+        btnSiguientePartido = new JButton("Partido Siguiente");
+        btnSiguientePartido.setToolTipText("Abre la ventana para ingresar resultado del siguiente partido");
 
         btnCambiarVista = new JToggleButton("Modo Eliminatorio");
         btnCambiarVista.setToolTipText("Cambiar entre vista de Liga y Eliminatoria");
@@ -67,7 +68,7 @@ public class PanelBotones extends JPanel {
         buttonPanel.add(btnCambiarVista);
         buttonPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         buttonPanel.add(btnComenzarTorneo);
-        buttonPanel.add(btnReporte);
+        buttonPanel.add(btnSiguientePartido);
 
         add(buttonPanel);
         add(Box.createVerticalGlue());
@@ -77,7 +78,7 @@ public class PanelBotones extends JPanel {
         btnAñadirParticipante.addActionListener(this::accionAñadirParticipante);
         btnEliminarParticipante.addActionListener(this::accionEliminarParticipante);
         btnComenzarTorneo.addActionListener(this::accionComenzarTorneo);
-        btnReporte.addActionListener(this::accionReporte);
+        btnSiguientePartido.addActionListener(this::accionSiguientePartido);
         btnCambiarVista.addActionListener(this::accionCambiarVista);
     }
 
@@ -118,8 +119,7 @@ public class PanelBotones extends JPanel {
                 if(p instanceof ParticipanteLiga){
                     Stats stats = ((ParticipanteLiga) p).getStats();
                     torneoActual.añadirParticipante(p);
-                    DefaultTableModel modelo = (DefaultTableModel)torneoActual.getModeloTabla();
-                    modelo.addRow(new Object[]{p.getNombre(),stats.getPuntos(),stats.getPartidosJugados()});
+                    panelCentral.actualizarTablaLiga(torneoActual);
                 }else{
 
                 }
@@ -160,17 +160,17 @@ public class PanelBotones extends JPanel {
             if (filaSeleccionada != -1) {
                 torneoActual.getListaParticipantes().getLista().remove(filaSeleccionada);
 
-                DefaultTableModel modelo = (DefaultTableModel) panelCentral.getTabla().getModel();
-                modelo.removeRow(filaSeleccionada);
+                panelCentral.actualizarTablaLiga(torneoActual);
+
+                JOptionPane.showMessageDialog(null,
+                        "Participante eliminado",
+                        "Notificacion", JOptionPane.INFORMATION_MESSAGE);
 
             } else {
                 JOptionPane.showMessageDialog(null, "Debes seleccionar una fila para eliminar.",
                         "Notificacion",JOptionPane.INFORMATION_MESSAGE);
             }
 
-            JOptionPane.showMessageDialog(null,
-                    "Participante eliminado",
-                    "Notificacion", JOptionPane.INFORMATION_MESSAGE);
         } else{
             JOptionPane.showMessageDialog(null,
                     "Torneo ya iniciado (No se puede eliminar participante cuando el torneo ha comenzado)",
@@ -181,29 +181,85 @@ public class PanelBotones extends JPanel {
 
 
     private void accionComenzarTorneo(ActionEvent e) {
-        boolean iniciado = torneoActual.iniciarTorneo();
-        if (iniciado) {
-            JOptionPane.showMessageDialog(this, "Torneo iniciado correctamente",
+        Boolean tamañoCorrecto = torneoActual.getListaParticipantes().getLista().size() >= 2;
+        if(tamañoCorrecto){
+            boolean iniciado = torneoActual.iniciarTorneo();
+            if (iniciado) {
+                torneoActual.generarPartidos();
+                JOptionPane.showMessageDialog(this, "Torneo iniciado correctamente",
+                        "Notificación", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "El torneo ya esta iniciado",
+                        "Notificacion", JOptionPane.WARNING_MESSAGE);
+            }
+        }else{
+            JOptionPane.showMessageDialog(this, "El torneo no tiene el tamaño minimo de participantes (dos participantes)",
                     "Notificación", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(this, "El torneo ya esta iniciado",
-                    "Notificacion", JOptionPane.WARNING_MESSAGE);
         }
+
     }
 
 
-    private void accionReporte(ActionEvent e) {
-        JOptionPane.showMessageDialog(this, "Reporte generado",
-                "Reporte", JOptionPane.INFORMATION_MESSAGE);
+    private void accionSiguientePartido(ActionEvent e) {
+        if(torneoActual.getIniciado()){
+            Partido partidoActual = torneoActual.getPartidos().get(torneoActual.getPartidoActual());
+            String nombre1 = partidoActual.getP1().getNombre();
+            String nombre2 = partidoActual.getP2().getNombre();
+
+            JDialog dialogo = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Ingresar Resultado", true);
+            dialogo.setSize(350, 180);
+            dialogo.setLocationRelativeTo(this);
+            dialogo.setLayout(new BorderLayout());
+
+            JPanel panel = new JPanel(new GridLayout(3, 2, 10, 10));
+            panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+
+            JLabel lblP1 = new JLabel(nombre1 + ":");
+            JTextField tfP1 = new JTextField();
+
+            JLabel lblP2 = new JLabel(nombre2 + ":");
+            JTextField tfP2 = new JTextField();
+
+            panel.add(lblP1);
+            panel.add(tfP1);
+            panel.add(lblP2);
+            panel.add(tfP2);
+
+            JButton btnGuardar = new JButton("Guardar");
+            btnGuardar.addActionListener(ev -> {
+                try {
+                    int resultado1 = Integer.parseInt(tfP1.getText().trim());
+                    int resultado2 = Integer.parseInt(tfP2.getText().trim());
+
+                    torneoActual.jugarPartidoSiguiente(resultado1,resultado2);
+                    panelCentral.actualizarTablaLiga(torneoActual);
+
+
+
+                    dialogo.dispose();
+                    JOptionPane.showMessageDialog(this, "Resultado guardado correctamente",
+                            "Resultado", JOptionPane.INFORMATION_MESSAGE);
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(dialogo, "Debes ingresar números válidos.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            });
+
+            JPanel panelBoton = new JPanel();
+            panelBoton.add(btnGuardar);
+
+            dialogo.add(panel, BorderLayout.CENTER);
+            dialogo.add(panelBoton, BorderLayout.SOUTH);
+
+            dialogo.setVisible(true);
+        } else{
+            JOptionPane.showMessageDialog(this, "El torneo no ha iniciado aun",
+                    "Error", JOptionPane.INFORMATION_MESSAGE);
+        }
+
     }
 
     private void accionCambiarVista(ActionEvent e) {
-        if (btnCambiarVista.isSelected()) {
-            btnCambiarVista.setText("Modo Liga");
-            panelCentral.setComportamiento(new ComportamientoBracket());
-        } else {
-            btnCambiarVista.setText("Modo Eliminatorio");
-            panelCentral.setComportamiento(new ComportamientoLiga());
-        }
+
     }
 }

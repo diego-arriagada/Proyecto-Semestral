@@ -11,9 +11,7 @@ public class ParticipanteLiga extends DecoradorParticipante{
         this.stats = new Stats();
     }
 
-    public void agregarPuntos(){
-        stats.setPuntos(stats.getPuntos() + 3);
-    }
+
     public Stats getStats(){
         return stats;
     }

@@ -7,4 +7,12 @@ public class Partido{
         this.p1 = p1;
         this.p2 = p2;
     }
+
+    public Participante getP1() {
+        return p1;
+    }
+
+    public Participante getP2() {
+        return p2;
+    }
 }

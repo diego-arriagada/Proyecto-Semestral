@@ -10,5 +10,5 @@ import java.util.ArrayList;
 
 public interface ComportamientoTorneo {
     ArrayList<Partido> generarPartidos(Lista<Participante> participantes,ArrayList<Partido> partidos);
-    void jugarPartidoSiguiente(ArrayList<Partido> partidos,int partidoActual);
+    void jugarPartidoSiguiente(ArrayList<Partido> partidos,int partidoActual,int resultado1,int resultado2);
 }
