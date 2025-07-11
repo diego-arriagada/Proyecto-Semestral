@@ -208,7 +208,7 @@ public class PanelBotones extends JPanel {
 
             JDialog dialogo = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Ingresar Resultado", true);
             dialogo.setSize(350, 180);
-            dialogo.setLocationRelativeTo(this);
+            dialogo.setLocationRelativeTo(null);
             dialogo.setLayout(new BorderLayout());
 
             JPanel panel = new JPanel(new GridLayout(3, 2, 10, 10));
