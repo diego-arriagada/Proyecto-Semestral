@@ -203,8 +203,8 @@ public class PanelBotones extends JPanel {
     private void accionSiguientePartido(ActionEvent e) {
         if(torneoActual.getIniciado()){
             Partido partidoActual = torneoActual.getPartidos().get(torneoActual.getPartidoActual());
-            String nombre1 = partidoActual.getP1().getNombre();
-            String nombre2 = partidoActual.getP2().getNombre();
+            String nombre1 = partidoActual.getLocal().getNombre();
+            String nombre2 = partidoActual.getVisita().getNombre();
 
             JDialog dialogo = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Ingresar Resultado", true);
             dialogo.setSize(350, 180);
@@ -228,8 +228,9 @@ public class PanelBotones extends JPanel {
             JButton btnGuardar = new JButton("Guardar");
             btnGuardar.addActionListener(ev -> {
                 try {
-                    int resultado1 = Integer.parseInt(tfP1.getText().trim());
-                    int resultado2 = Integer.parseInt(tfP2.getText().trim());
+                    int resultado1 = Integer.parseUnsignedInt(tfP1.getText().trim());
+                    int resultado2 = Integer.parseUnsignedInt(tfP2.getText().trim());
+
 
                     torneoActual.jugarPartidoSiguiente(resultado1,resultado2);
                     panelCentral.actualizarTablaLiga(torneoActual);

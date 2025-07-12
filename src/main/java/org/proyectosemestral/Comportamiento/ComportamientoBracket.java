@@ -55,9 +55,8 @@ public class ComportamientoBracket implements ComportamientoTorneo {
         }
 
         //falta poner el ingreso de datos al programa
-        partidoActual.setGolesLocal(4);
-        partidoActual.setGolesVisitante(2);
-
+        partidoActual.setGolesLocal(resultado1);
+        partidoActual.setGolesVisitante(resultado2);
         partidoActual.setGanador();
 
         // Si es necesario generar nuevos partidos (siguiente fase)

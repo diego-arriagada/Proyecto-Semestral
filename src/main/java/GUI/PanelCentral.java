@@ -7,6 +7,9 @@ import org.proyectosemestral.Decoradores.ParticipanteLiga;
 import org.proyectosemestral.Participante;
 import org.proyectosemestral.Torneo;
 
+import java.util.Collections;
+import java.util.Comparator;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -76,7 +79,7 @@ public class PanelCentral extends JPanel {
     }
 
     private DefaultTableModel crearModeloTablaLiga(Torneo torneo) {
-        String[] columnas = {"Nombre","Pts","PJ"};
+        String[] columnas = {"Nombre","PJ","G", "E", "P", "GF", "GC", "DG", "PTS"};
         DefaultTableModel modelo = new DefaultTableModel(columnas, 0) {
             // Opcional: para hacer que las celdas no sean editables desde la tabla
             public boolean isCellEditable(int row, int column) {
@@ -88,7 +91,7 @@ public class PanelCentral extends JPanel {
         for (Participante p : torneo.getListaParticipantes().getLista()) {
             if(p instanceof ParticipanteLiga){
                 ParticipanteLiga pL = (ParticipanteLiga)p;
-                Object[] fila = {pL.getNombre(), pL.getStats().getPuntos(), pL.getStats().getPartidosJugados()};
+                Object[] fila = {pL.getNombre(), pL.getStats().getPartidosJugados(), pL.getStats().getVictorias(), pL.getStats().getEmpates(), pL.getStats().getDerrotas(), pL.getStats().getGoles(), pL.getStats().getGolesEnContra(), pL.getStats().getGoles()-pL.getStats().getGolesEnContra(), pL.getStats().getPuntos()};
                 modelo.addRow(fila);
             }
 
@@ -100,14 +103,20 @@ public class PanelCentral extends JPanel {
         DefaultTableModel modelo = (DefaultTableModel) getTabla().getModel();
         // Limpia la tabla antes de llenarla de nuevo
         modelo.setRowCount(0);
-
+        torneo.getListaParticipantes().getLista().sort(null);
+        Collections.reverse(torneo.getListaParticipantes().getLista());
         for (Participante p : torneo.getListaParticipantes().getLista()) {
             if (p instanceof ParticipanteLiga) {
-                ParticipanteLiga pl = (ParticipanteLiga) p;
-                Object[] fila = {
-                        pl.getNombre(),
-                        pl.getStats().getPuntos(),
-                        pl.getStats().getPartidosJugados()
+                ParticipanteLiga pL = (ParticipanteLiga) p;
+                Object[] fila = {pL.getNombre(),
+                        pL.getStats().getPartidosJugados(),
+                        pL.getStats().getVictorias(),
+                        pL.getStats().getEmpates(),
+                        pL.getStats().getDerrotas(),
+                        pL.getStats().getGoles(),
+                        pL.getStats().getGolesEnContra(),
+                        pL.getStats().getGoles()-pL.getStats().getGolesEnContra(),
+                        pL.getStats().getPuntos()
                 };
                 modelo.addRow(fila);
             } else {

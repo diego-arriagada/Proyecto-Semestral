@@ -58,14 +58,18 @@ public class ComportamientoLiga implements ComportamientoTorneo {
     @Override
     public void jugarPartidoSiguiente(ArrayList<Partido> partidos,int partidoSiguiente,int resultado1,int resultado2){
         Partido partidoActual = partidos.get(partidoSiguiente);
-        ParticipanteLiga P1 = (ParticipanteLiga) partidoActual.getP1();
-        ParticipanteLiga P2 = (ParticipanteLiga) partidoActual.getP2();
+        ParticipanteLiga P1 = (ParticipanteLiga) partidoActual.getLocal();
+        ParticipanteLiga P2 = (ParticipanteLiga) partidoActual.getVisita();
         if(resultado1 > resultado2){
             P1.getStats().setPuntos(P1.getStats().getPuntos() + 3);
             P1.getStats().setPartidosJugados(P1.getStats().getPartidosJugados() + 1);
             P2.getStats().setPartidosJugados(P2.getStats().getPartidosJugados() + 1);
             P1.getStats().setVictorias(P1.getStats().getVictorias() + 1);
             P2.getStats().setDerrotas(P2.getStats().getDerrotas() + 1);
+            P1.getStats().setGoles(resultado1);
+            P2.getStats().setGoles(resultado2);
+            P1.getStats().setGolesEnContra(resultado2);
+            P2.getStats().setGolesEnContra(resultado1);
         }
         if(resultado1 < resultado2){
             P2.getStats().setPuntos(P2.getStats().getPuntos() + 3);
@@ -73,6 +77,10 @@ public class ComportamientoLiga implements ComportamientoTorneo {
             P2.getStats().setPartidosJugados(P2.getStats().getPartidosJugados() + 1);
             P1.getStats().setDerrotas(P1.getStats().getDerrotas() + 1);
             P2.getStats().setVictorias(P2.getStats().getVictorias() + 1);
+            P1.getStats().setGoles(resultado1);
+            P2.getStats().setGoles(resultado2);
+            P1.getStats().setGolesEnContra(resultado2);
+            P2.getStats().setGolesEnContra(resultado1);
         }
         if(resultado1 == resultado2){
             P1.getStats().setPuntos(P1.getStats().getPuntos() + 1);
@@ -81,6 +89,10 @@ public class ComportamientoLiga implements ComportamientoTorneo {
             P2.getStats().setPartidosJugados(P2.getStats().getPartidosJugados() + 1);
             P1.getStats().setEmpates(P1.getStats().getEmpates() + 1);
             P2.getStats().setEmpates(P2.getStats().getEmpates() + 1);
+            P1.getStats().setGoles(resultado1);
+            P2.getStats().setGoles(resultado2);
+            P1.getStats().setGolesEnContra(resultado2);
+            P2.getStats().setGolesEnContra(resultado1);
         }
     }
 }

@@ -7,6 +7,7 @@ public class Stats{
     private int derrotas;
     private int empates;
     private int goles;
+    private int golesEnContra;
     public Stats(){
         this.puntos=0;
         this.partidosJugados=0;
@@ -14,6 +15,7 @@ public class Stats{
         this.derrotas=0;
         this.empates=0;
         this.goles=0;
+        this.golesEnContra=0;
     }
 
     public void setPuntos(int n){
@@ -34,6 +36,7 @@ public class Stats{
     public void setGoles(int n){
         this.goles = n;
     }
+    public void setGolesEnContra(int n){ this.golesEnContra = n; }
 
     public int getPuntos(){
         return puntos;
@@ -53,5 +56,5 @@ public class Stats{
     public int getGoles(){
         return goles;
     }
-
+    public int getGolesEnContra() {return golesEnContra;}
 }
