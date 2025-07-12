@@ -5,6 +5,7 @@ import org.proyectosemestral.Comportamiento.ComportamientoLiga;
 import org.proyectosemestral.Comportamiento.ComportamientoBracket;
 import org.proyectosemestral.Decoradores.ParticipanteLiga;
 import org.proyectosemestral.Participante;
+import org.proyectosemestral.Partido;
 import org.proyectosemestral.Torneo;
 
 import java.util.Collections;
@@ -17,6 +18,7 @@ import java.awt.*;
 public class PanelCentral extends JPanel {
     private ComportamientoTorneo comportamiento;
     private JTable tabla;
+    private JTable tablaCalendario;
     private JPanel panelContenido;
     private CardLayout cardLayout;
     private Torneo torneoActual;
@@ -68,7 +70,7 @@ public class PanelCentral extends JPanel {
         tabbedPane.addTab("Clasificación", scrollClasificacion);
 
         // Pestaña de calendario
-        JTable tablaCalendario = crearTablaCalendario();
+        tablaCalendario = new JTable(crearTablaCalendario(torneoActual));
         JScrollPane scrollCalendario = new JScrollPane(tablaCalendario);
         tabbedPane.addTab("Calendario", scrollCalendario);
 
@@ -81,7 +83,6 @@ public class PanelCentral extends JPanel {
     private DefaultTableModel crearModeloTablaLiga(Torneo torneo) {
         String[] columnas = {"Nombre","PJ","G", "E", "P", "GF", "GC", "DG", "PTS"};
         DefaultTableModel modelo = new DefaultTableModel(columnas, 0) {
-            // Opcional: para hacer que las celdas no sean editables desde la tabla
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
@@ -127,12 +128,37 @@ public class PanelCentral extends JPanel {
         }
     }
 
-    private JTable crearTablaCalendario() {
-        DefaultTableModel modelo = new DefaultTableModel(
-                new Object[]{"Jornada", "Local", "Resultado", "Visitante", "Fecha"}, 0);
-        // Datos de ejemplo
-        modelo.addRow(new Object[]{1, "Equipo A", "2-1", "Equipo B", "15/05/2023"});
-        return new JTable(modelo);
+    private DefaultTableModel crearTablaCalendario(Torneo torneo) {
+        String[] columnas = {"Jornada","Local","Resultado","Visitante"};
+        DefaultTableModel modelo = new DefaultTableModel(columnas, 0) {
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        int i = 1;
+        if(torneoActual.getPartidos()!=null) {
+            for (Partido p : torneoActual.getPartidos()) {
+                Object[] fila = {i, p.getLocal().getNombre(), p.getGolesLocal() + "-" + p.getGolesVisitante(), p.getVisita().getNombre()};
+                modelo.addRow(fila);
+                i++;
+            }
+        }
+        torneoActual.setModeloCalendario(modelo);
+        return modelo;
+    }
+
+    public void actualizarTablaCalendario(){
+        DefaultTableModel modelo = (DefaultTableModel) getTablaCalendario().getModel();
+        // Limpia la tabla antes de llenarla de nuevo
+        modelo.setRowCount(0);
+
+        int i = 1;
+        for( Partido p : torneoActual.getPartidos()){
+            Object[] fila = {i,p.getLocal().getNombre(),p.getGolesLocal() + "-" + p.getGolesVisitante(),p.getVisita().getNombre()};
+            modelo.addRow(fila);
+            i++;
+        }
     }
 
     private JPanel crearPanelBracket() {
@@ -160,5 +186,9 @@ public class PanelCentral extends JPanel {
 
     public JTable getTabla(){
         return tabla;
+    }
+
+    public JTable getTablaCalendario(){
+        return tablaCalendario;
     }
 }

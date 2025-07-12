@@ -186,6 +186,7 @@ public class PanelBotones extends JPanel {
             boolean iniciado = torneoActual.iniciarTorneo();
             if (iniciado) {
                 torneoActual.generarPartidos();
+                panelCentral.actualizarTablaCalendario();
                 JOptionPane.showMessageDialog(this, "Torneo iniciado correctamente",
                         "Notificación", JOptionPane.INFORMATION_MESSAGE);
             } else {
@@ -234,6 +235,7 @@ public class PanelBotones extends JPanel {
 
                     torneoActual.jugarPartidoSiguiente(resultado1,resultado2);
                     panelCentral.actualizarTablaLiga(torneoActual);
+                    panelCentral.actualizarTablaCalendario();
 
 
 

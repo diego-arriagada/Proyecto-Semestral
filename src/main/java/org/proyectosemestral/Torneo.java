@@ -2,6 +2,7 @@ package org.proyectosemestral;
 
 import org.proyectosemestral.Comportamiento.ComportamientoTorneo;
 
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 
@@ -14,6 +15,7 @@ public class Torneo{
     private ArrayList<Partido> partidos;
     private int partidoActual;
     private DefaultTableModel modeloTabla;
+    private DefaultTableModel modeloCalendario;
 
     public Torneo(String nombreTorneo,ComportamientoTorneo comportamiento){
         this.nombreTorneo = nombreTorneo;
@@ -120,6 +122,14 @@ public class Torneo{
 
     public ArrayList<Partido> getPartidos(){
         return partidos;
+    }
+
+    public void setModeloCalendario(DefaultTableModel modeloCalendario){
+        this.modeloCalendario = modeloCalendario;
+    }
+
+    public DefaultTableModel getModeloCalendario(){
+        return modeloCalendario;
     }
 }
 
