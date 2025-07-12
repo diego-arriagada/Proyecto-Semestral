@@ -96,10 +96,10 @@ public class PanelBotones extends JPanel {
             JLabel ingresarNombre = new JLabel("Ingrese nombre de participante:");
             JTextField tfNombreParticipante = new JTextField(20);
 
-            JLabel ingresarCorreo = new JLabel("Ingrese correo del participante:");
+            JLabel ingresarCorreo = new JLabel("Ingrese correo del participante (xxx@yyy.zzz):");
             JTextField tfCorreoParticipante = new JTextField(20);
 
-            JLabel ingresarNumero = new JLabel("Ingrese numero del participante:");
+            JLabel ingresarNumero = new JLabel("Ingrese numero de telefono (9 + 8 digitos):");
             JTextField tfNumeroParticipante = new JTextField(12);
 
 
