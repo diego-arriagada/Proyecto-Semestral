@@ -1,5 +1,13 @@
 package org.proyectosemestral;
 
+
+/** Clase que representa un partido de futbol entre dos equipos participantes.
+ *
+ * @author Diego Arriagada
+ * @author Victor Galaz
+ * @author Matias Catril
+ * @version 1.0
+ */
 public class Partido{
     private Participante p1;
     private Participante p2;

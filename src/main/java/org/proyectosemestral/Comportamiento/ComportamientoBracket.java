@@ -6,11 +6,29 @@ import org.proyectosemestral.Partido;
 
 import java.util.ArrayList;
 import java.util.Collections;
-
+/** * ComportamientoBracket es una implementación de la interfaz ComportamientoTorneo que define el comportamiento
+ * específico para un torneo en formato de bracket (eliminación directa).
+ *
+ * Esta clase se encarga de generar los partidos iniciales, gestionar los resultados y avanzar a las siguientes fases.
+ * Trabaja por rondas, donde cada ronda elimina a la mitad de los participantes hasta que queda un campeón.
+ *
+ * @author Diego Arriagada
+ * @author Victor Galaz
+ * @author Matias Catril
+ * @version 1.0
+ */
 public class ComportamientoBracket implements ComportamientoTorneo {
 
     public ComportamientoBracket() {}
 
+    /**
+     * Genera los partidos iniciales del torneo en formato bracket.
+     * Los equipos se mezclan aleatoriamente y se emparejan para formar los partidos de la primera ronda.
+     *
+     * @param participantes Lista de participantes en el torneo.
+     * @param partidos Lista donde se almacenarán los partidos generados.
+     * @return Lista de partidos generados.
+     */
     @Override
     public ArrayList<Partido> generarPartidos(Lista<Participante> participantes, ArrayList<Partido> partidos) {
         //calcula cuantos partidos habran en base a los equipos que hay, comprueba si es viable con la cantidad
@@ -42,6 +60,15 @@ public class ComportamientoBracket implements ComportamientoTorneo {
         return partidos;
     }
 
+    /**
+     * Juega el siguiente partido del torneo, actualizando los resultados y determinando el ganador.
+     * Si todos los partidos de la fase actual han sido jugados, genera la siguiente fase.
+     *
+     * @param partidos Lista de partidos del torneo.
+     * @param partidoPorJugar Índice del partido que se va a jugar.
+     * @param resultado1 Goles del equipo local.
+     * @param resultado2 Goles del equipo visitante.
+     */
     @Override
     public void jugarPartidoSiguiente(ArrayList<Partido> partidos, int partidoPorJugar, int resultado1, int resultado2) {
         if (partidoPorJugar >= partidos.size()) {
@@ -64,7 +91,13 @@ public class ComportamientoBracket implements ComportamientoTorneo {
             generarSiguienteFase(partidos);
         }
     }
-
+    /** Verifica si es necesario generar una nueva fase del torneo.
+     * Esto ocurre cuando todos los partidos de la fase actual han sido jugados.
+     *
+     * @param partidos Lista de partidos de la fase actual.
+     * @param partidoActual Índice del partido actual que se está jugando.
+     * @return true si se debe generar una nueva fase, false en caso contrario.
+     */
     private boolean debeGenerarNuevaFase(ArrayList<Partido> partidos, int partidoActual) {
         // Verifica si todos los partidos de la fase actual han sido jugados
         int partidosPorFase = partidos.size() - partidoActual;
@@ -76,6 +109,12 @@ public class ComportamientoBracket implements ComportamientoTorneo {
         return true;
     }
 
+    /** Genera la siguiente fase del torneo basándose en los ganadores de la fase actual.
+     * Si solo queda un ganador, se declara campeón.
+     * Si hay más de un ganador, se generan nuevos partidos para la siguiente ronda.
+     *
+     * @param partidos Lista de partidos de la fase actual.
+     */
     private void generarSiguienteFase(ArrayList<Partido> partidos) {
         ArrayList<Participante> ganadores = new ArrayList<>();
 

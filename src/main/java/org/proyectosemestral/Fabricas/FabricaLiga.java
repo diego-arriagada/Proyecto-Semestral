@@ -6,6 +6,14 @@ import org.proyectosemestral.Decoradores.ParticipanteLiga;
 import org.proyectosemestral.Participante;
 import org.proyectosemestral.Torneo;
 
+/** FabricaLiga es una implementación de la interfaz FabricaTorneo, creando instancias de Torneo y Participante
+ * en el caso especifico de una liga.
+ *
+ * @author Diego Arriagada
+ * @author Victor Galaz
+ * @author Matias Catril
+ * @version 1.0
+ */
 public class FabricaLiga implements FabricaTorneo {
 
     @Override

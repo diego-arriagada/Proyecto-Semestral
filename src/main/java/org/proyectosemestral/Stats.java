@@ -1,5 +1,13 @@
 package org.proyectosemestral;
 
+
+/** Clase que define las estadísticas a ser trackeadas para cada participante en un torneo formato liga.
+ *
+ * @author Diego Arriagada
+ * @author Victor Galaz
+ * @author Matias Catril
+ * @version 1.0
+ */
 public class Stats{
     private int puntos;
     private int partidosJugados;

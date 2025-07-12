@@ -10,10 +10,30 @@ import java.util.List;
 
 import java.util.ArrayList;
 
+/** ComportamientoLiga es una implementación de la interfaz ComportamientoTorneo, y define el comportamiento específico
+ * de un torneo tipo liga.
+ *
+ * Esta clase se encarga de generar los partidos de la liga, asegurando que cada equipo juegue contra todos los demás
+ * equipos en dos ocasiones (ida y vuelta).
+ * Además, maneja la lógica para actualizar las estadísticas de los participantes después de cada partido.
+ *
+ * @author Diego Arriagada
+ * @author Victor Galaz
+ * @author Matias Catril
+ * @version 1.0
+ */
 public class ComportamientoLiga implements ComportamientoTorneo {
 
     public ComportamientoLiga(){}
 
+    /**
+     * Genera los partidos de la liga.
+     * Cada equipo juega contra todos los demás equipos en dos ocasiones (ida y vuelta).
+     *
+     * @param participantes Lista de participantes en la liga.
+     * @param partidos Lista donde se almacenarán los partidos generados.
+     * @return Lista de partidos generados.
+     */
     @Override
     public ArrayList<Partido> generarPartidos(Lista<Participante> participantes, ArrayList<Partido> partidos) {
         int n = participantes.getLista().size();
@@ -55,6 +75,14 @@ public class ComportamientoLiga implements ComportamientoTorneo {
         return partidos;
     }
 
+    /**
+     * Juega el siguiente partido de la liga, actualizando las estadísticas de los participantes.
+     *
+     * @param partidos Lista de partidos de la liga.
+     * @param partidoSiguiente Índice del partido a jugar.
+     * @param resultado1 Resultado del primer participante (local).
+     * @param resultado2 Resultado del segundo participante (visitante).
+     */
     @Override
     public void jugarPartidoSiguiente(ArrayList<Partido> partidos,int partidoSiguiente,int resultado1,int resultado2){
         Partido partidoActual = partidos.get(partidoSiguiente);

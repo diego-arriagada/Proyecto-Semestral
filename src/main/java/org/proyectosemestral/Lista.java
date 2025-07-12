@@ -2,6 +2,15 @@ package org.proyectosemestral;
 import java.lang.classfile.attribute.MethodParameterInfo;
 import java.util.ArrayList;
 
+/** La clase Lista representa una coleccion de participantes en un torneo, siendo la base para la gestion de los mismos.
+ * El objetivo de esta clase es permitir la adición, eliminación y búsqueda de participantes, para finalmente conseguir
+ * que un Torneo esté compuesto por su lista de participantes y no por individuos.
+ *
+ * @author Diego Arriagada
+ * @author Victor Galaz
+ * @author Matias Catril
+ * @version 1.0
+ */
 public class Lista<Participante>{
     ArrayList<Participante> lista;
 

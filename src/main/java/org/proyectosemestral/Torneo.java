@@ -6,6 +6,18 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 
+/** Clase principal que representa un torneo.
+ *
+ * Esta clase permite gestionar un torneo, incluyendo la adición de participantes,
+ * la generación de partidos, el inicio del torneo y la gestión de los resultados de los partidos.
+ * La clase utiliza el patrón Strategy para definir diferentes comportamientos de torneo,
+ * como el comportamiento de un torneo tipo bracket o liga.
+ *
+ * @author Diego Arriagada
+ * @author Victor Galaz
+ * @author Matias Catril
+ * @version 1.0
+ */
 public class Torneo{
     private String nombreTorneo;
     private ComportamientoTorneo comportamiento;
@@ -17,6 +29,11 @@ public class Torneo{
     private DefaultTableModel modeloTabla;
     private DefaultTableModel modeloCalendario;
 
+    /** Constructor de la clase Torneo.
+     *
+     * @param nombreTorneo Nombre del torneo.
+     * @param comportamiento Comportamiento del torneo, que define cómo se generan los partidos y se manejan los resultados (bracket o liga).
+     */
     public Torneo(String nombreTorneo,ComportamientoTorneo comportamiento){
         this.nombreTorneo = nombreTorneo;
         this.comportamiento = comportamiento;
@@ -26,6 +43,11 @@ public class Torneo{
         listaParticipantes = new Lista();
     }
 
+    /** Metodo para generar los partidos del torneo.
+     *
+     * Este metodo genera los partidos del torneo utilizando el comportamiento definido (bracket o liga).
+     * Debe ser llamado después de iniciar el torneo y antes de jugar los partidos.
+     */
     public void generarPartidos(){
         if(iniciado && !partidosGenerados) {
             ArrayList<Partido> partidos = new ArrayList<>();
@@ -36,6 +58,16 @@ public class Torneo{
             //torneo no iniciado
         }
     }
+
+    /** Metodo para jugar el siguiente partido del torneo.
+     *
+     * Este metodo permite jugar el siguiente partido del torneo, actualizando los resultados y avanzando al siguiente partido.
+     * Debe ser llamado después de que los partidos hayan sido generados.
+     * Al igual que todos los metodos de Torneo, su funcionamiento depende del comportamiento definido (bracket o liga).
+     *
+     * @param resultado1 Resultado del primer participante (local).
+     * @param resultado2 Resultado del segundo participante (visitante).
+     */
     public void jugarPartidoSiguiente(int resultado1, int resultado2){
         if(iniciado){
             comportamiento.jugarPartidoSiguiente(partidos,partidoActual,resultado1,resultado2);
@@ -43,8 +75,14 @@ public class Torneo{
         }
     }
 
-
-
+    /** Metodo para añadir un participante al torneo.
+     *
+     * Este metodo permite añadir un participante al torneo, siempre y cuando el torneo no haya sido iniciado.
+     * Si el torneo ya ha sido iniciado, no se pueden añadir más participantes.
+     *
+     * @param p Participante a añadir al torneo.
+     * @return true si el participante fue añadido correctamente, false si el torneo ya ha sido iniciado.
+     */
     public Boolean añadirParticipante(Participante p){
         if(!iniciado){
             listaParticipantes.añadirParticipante(p);
@@ -55,6 +93,11 @@ public class Torneo{
 
     }
 
+    /** Metodo para eliminar un participante del torneo.
+     *
+     *
+     * @param p Participante a eliminar del torneo.
+     */
     public void eliminarParticipante(Participante p){
         if(iniciado!=true) {
             if (p != null && listaParticipantes.getLista().contains(p)) {
@@ -67,6 +110,13 @@ public class Torneo{
         }
     }
 
+    /** Metodo para iniciar el torneo.
+     *
+     * Este metodo inicia el torneo, permitiendo que se generen los partidos y se jueguen.
+     * Si el torneo ya ha sido iniciado, no se puede volver a iniciar.
+     *
+     * @return true si el torneo fue iniciado correctamente, false si ya estaba iniciado.
+     */
     public boolean iniciarTorneo() {
         if (iniciado) {
             return false;
@@ -132,7 +182,3 @@ public class Torneo{
         return modeloCalendario;
     }
 }
-
-
-
-

@@ -6,6 +6,14 @@ import org.proyectosemestral.Decoradores.ParticipanteBracket;
 import org.proyectosemestral.Participante;
 import org.proyectosemestral.Torneo;
 
+/** FabricaBracket es una implementación de la interfaz FabricaTorneo, creando instancias de Torneo y Participante en el caso
+ * especifico de un torneo tipo bracket.
+ *
+ * @author Diego Arriagada
+ * @author Victor Galaz
+ * @author Matias Catril
+ * @version 1.0
+ */
 public class FabricaBracket implements FabricaTorneo {
 
     @Override
