@@ -50,7 +50,6 @@ En la parte gráfica, se utilizón el patrón para crear botones mediante un mé
 - #### FabricaTorneo: Clase abstracta que define el método de creación de torneos.
 - #### FabricaLiga: Implementación de la fábrica para crear torneos de liga y añadir participantes.
 - #### FabricaBracket: Implementación de la fábrica para crear torneos de eliminación directa y añadir participantes.
-- #### ButtonFactory: Clase que define el método de creación de botones para la interfaz gráfica.
 
 # Decisiones Importantes
 El principal cambio en el proyecto respecto al enunciado original fue la decisión relativamente tardía de implementar un programa exclusivamente centrado a torneos de fútbol en lugar de un sistema más genérico. 

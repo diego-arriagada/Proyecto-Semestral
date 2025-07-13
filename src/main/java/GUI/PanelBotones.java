@@ -24,7 +24,7 @@ public class PanelBotones extends JPanel {
     private JButton btnEliminarParticipante;
     private JButton btnComenzarTorneo;
     private JButton btnSiguientePartido;
-    private JToggleButton btnCambiarVista;
+    private JToggleButton btnDatosParticipante;
     private Torneo torneoActual;
     private FabricaTorneo fabricaTorneo;
     public PanelBotones(PanelCentral panelCentral, FabricaTorneo fabricaTorneo) {
@@ -49,8 +49,8 @@ public class PanelBotones extends JPanel {
         btnSiguientePartido = new JButton("Partido Siguiente");
         btnSiguientePartido.setToolTipText("Abre la ventana para ingresar resultado del siguiente partido");
 
-        btnCambiarVista = new JToggleButton("Modo Eliminatorio");
-        btnCambiarVista.setToolTipText("Cambiar entre vista de Liga y Eliminatoria");
+        btnDatosParticipante = new JToggleButton("Modo Eliminatorio");
+        btnDatosParticipante.setToolTipText("Cambiar entre vista de Liga y Eliminatoria");
     }
 
     private void setupLayout() {
@@ -65,7 +65,7 @@ public class PanelBotones extends JPanel {
         buttonPanel.add(btnAñadirParticipante);
         buttonPanel.add(btnEliminarParticipante);
         buttonPanel.add(Box.createRigidArea(new Dimension(0, 20)));
-        buttonPanel.add(btnCambiarVista);
+        buttonPanel.add(btnDatosParticipante);
         buttonPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         buttonPanel.add(btnComenzarTorneo);
         buttonPanel.add(btnSiguientePartido);
@@ -79,7 +79,7 @@ public class PanelBotones extends JPanel {
         btnEliminarParticipante.addActionListener(this::accionEliminarParticipante);
         btnComenzarTorneo.addActionListener(this::accionComenzarTorneo);
         btnSiguientePartido.addActionListener(this::accionSiguientePartido);
-        btnCambiarVista.addActionListener(this::accionCambiarVista);
+        btnDatosParticipante.addActionListener(this::accionDatosParticipante);
     }
 
     private void accionAñadirParticipante(ActionEvent e) {
@@ -262,7 +262,28 @@ public class PanelBotones extends JPanel {
 
     }
 
-    private void accionCambiarVista(ActionEvent e) {
+    private void accionDatosParticipante(ActionEvent e) {
+        int filaSeleccionada = panelCentral.getTabla().getSelectedRow();
+        if (filaSeleccionada != -1){
+            Participante p = torneoActual.getListaParticipantes().getLista().get(filaSeleccionada);
+            JDialog dialogo = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Datos del participante", true);
+            dialogo.setSize(350, 180);
+            dialogo.setLocationRelativeTo(null);
+            dialogo.setLayout(new BorderLayout());
 
+            JPanel panel = new JPanel(new GridLayout(3, 2, 10, 10));
+            panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+
+            JLabel lblNombre = new JLabel("Nombre: "+p.getNombre());
+            JLabel lblCorreo = new JLabel("Correo: "+p.getCorreo());
+            JLabel lblNumero = new JLabel("Numero: "+p.getNumero());
+
+
+            panel.add(lblNombre);
+            panel.add(lblCorreo);
+            panel.add(lblNumero);
+            dialogo.add(panel);
+            dialogo.setVisible(true);
+        }
     }
 }

@@ -13,10 +13,12 @@ public class Partido{
     private Participante p2;
     private int golesLocal;
     private int golesVisitante;
-    private boolean ganadorLocal; //true si gana el local, false si gana el visitante
+    private boolean ganadorLocal;
+    private boolean partidoJugado;//true si gana el local, false si gana el visitante
     public Partido(Participante p1,Participante p2){
         this.p1 = p1;
         this.p2 = p2;
+        this.partidoJugado = false;
     }
 
     public Participante getLocal(){
@@ -52,6 +54,14 @@ public class Partido{
         } else { //falta definir que pasa en empate
 
         }
+    }
+
+    public boolean getPartidoJugado(){
+        return partidoJugado;
+    }
+
+    public void jugarPartido(){
+        this.partidoJugado = true;
     }
 
     public Participante getGanador(){

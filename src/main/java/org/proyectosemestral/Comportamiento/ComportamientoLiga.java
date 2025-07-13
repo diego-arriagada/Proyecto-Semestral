@@ -86,6 +86,9 @@ public class ComportamientoLiga implements ComportamientoTorneo {
     @Override
     public void jugarPartidoSiguiente(ArrayList<Partido> partidos,int partidoSiguiente,int resultado1,int resultado2){
         Partido partidoActual = partidos.get(partidoSiguiente);
+        partidoActual.setGolesLocal(resultado1);
+        partidoActual.setGolesVisitante(resultado2);
+        partidoActual.jugarPartido();
         ParticipanteLiga P1 = (ParticipanteLiga) partidoActual.getLocal();
         ParticipanteLiga P2 = (ParticipanteLiga) partidoActual.getVisita();
         if(resultado1 > resultado2){
