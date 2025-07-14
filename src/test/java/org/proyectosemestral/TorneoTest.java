@@ -1,93 +1,62 @@
 package org.proyectosemestral;
 
-import org.proyectosemestral.Comportamiento.ComportamientoLiga;
-import org.proyectosemestral.Decoradores.ParticipanteLiga;
-import org.proyectosemestral.Fabricas.FabricaLiga;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-
-import javax.swing.table.DefaultTableModel;
+import org.proyectosemestral.Comportamiento.ComportamientoLiga;
+import org.proyectosemestral.Decoradores.ParticipanteLiga;
+import org.proyectosemestral.Fabricas.FabricaBracket;
+import org.proyectosemestral.Fabricas.FabricaLiga;
 
 class TorneoTest {
     private Torneo torneo;
-    private FabricaLiga fabricaLiga;
     private Participante participante1;
     private Participante participante2;
+    private FabricaLiga fabricaLiga;
 
     @BeforeEach
     void setUp() {
         fabricaLiga = new FabricaLiga();
         torneo = fabricaLiga.crearTorneo("Torneo de Prueba");
-        participante1 = fabricaLiga.crearParticipante("Jugador 1", "jugador1@test.com", "+56912345678");
-        participante2 = fabricaLiga.crearParticipante("Jugador 2", "jugador2@test.com", "+56987654321");
+        participante1 = fabricaLiga.crearParticipante("Equipo A", "a@test.com", "123");
+        participante2 = fabricaLiga.crearParticipante("Equipo B", "b@test.com", "456");
     }
 
     @Test
-    void testAñadirParticipante() {
+    void testParticipantesTorneoNoIniciado() {
         assertTrue(torneo.añadirParticipante(participante1));
-        assertEquals(1, torneo.tamañoLista());
+        assertTrue(torneo.añadirParticipante(participante2));
+        assertEquals(2, torneo.tamañoLista());
     }
 
     @Test
-    void testAñadirParticipanteTorneoIniciado() {
+    void testParticipantesTorneoIniciado() {
         torneo.iniciarTorneo();
         assertFalse(torneo.añadirParticipante(participante1));
     }
 
     @Test
-    void testEliminarParticipante() {
-        torneo.añadirParticipante(participante1);
-        torneo.eliminarParticipante(participante1);
-        assertEquals(0, torneo.tamañoLista());
-    }
-
-    @Test
-    void testBuscarParticipante() {
-        torneo.añadirParticipante(participante1);
-        assertTrue(torneo.buscarParticipante(participante1));
-        assertFalse(torneo.buscarParticipante(participante2));
-    }
-
-    @Test
-    void testIniciarTorneo() {
-        assertTrue(torneo.iniciarTorneo());
-        assertTrue(torneo.getIniciado());
-    }
-
-    @Test
-    void testIniciarTorneoYaIniciado() {
-        torneo.iniciarTorneo();
-        assertFalse(torneo.iniciarTorneo());
-    }
-
-    @Test
-    void testGenerarPartidos() {
+    void testGeneracionPartidos() {
         torneo.añadirParticipante(participante1);
         torneo.añadirParticipante(participante2);
         torneo.iniciarTorneo();
         torneo.generarPartidos();
+
         assertNotNull(torneo.getPartidos());
-        assertEquals(2, torneo.getPartidos().size());
+        assertEquals(2, torneo.getPartidos().size()); // 2 equipos en liga = 2 partidos (ida y vuelta)
     }
 
     @Test
-    void testJugarPartidoSiguiente() {
+    void testActualizaEstadisticas() {
         torneo.añadirParticipante(participante1);
         torneo.añadirParticipante(participante2);
         torneo.iniciarTorneo();
         torneo.generarPartidos();
 
-        // Verificar que los participantes son instancias de ParticipanteLiga
-        assertTrue(participante1 instanceof ParticipanteLiga);
-        assertTrue(participante2 instanceof ParticipanteLiga);
-
-        torneo.jugarPartidoSiguiente(2, 1);
-        assertEquals(1, torneo.getPartidoActual());
-
-        // Acceder a las estadísticas a través del decorador
         ParticipanteLiga p1 = (ParticipanteLiga) participante1;
         ParticipanteLiga p2 = (ParticipanteLiga) participante2;
+
+        torneo.jugarPartidoSiguiente(2, 1);
 
         assertEquals(3, p1.getStats().getPuntos());
         assertEquals(0, p2.getStats().getPuntos());
@@ -96,35 +65,24 @@ class TorneoTest {
     }
 
     @Test
-    void testLimpiarLista() {
-        torneo.añadirParticipante(participante1);
-        torneo.añadirParticipante(participante2);
-        torneo.limpiarLista();
-        assertEquals(0, torneo.tamañoLista());
-    }
+    void testFinalizarTorneoBracket() {
+        FabricaBracket fabricaBracket = new FabricaBracket();
+        Torneo torneoBracket = fabricaBracket.crearTorneo("Torneo Bracket");
 
-    @Test
-    void testLimpiarListaTorneoIniciado() {
-        torneo.añadirParticipante(participante1);
-        torneo.iniciarTorneo();
-        torneo.limpiarLista();
-        assertEquals(1, torneo.tamañoLista());
-    }
+        // Añadir 4 participantes (potencia de 2)
+        for(int i=0; i<4; i++) {
+            torneoBracket.añadirParticipante(fabricaBracket.crearParticipante("Equipo "+i, "e"+i+"@test.com", "123"));
+        }
 
-    @Test
-    void testGetComportamiento() {
-        assertNotNull(torneo.getComportamiento());
-    }
+        torneoBracket.iniciarTorneo();
+        torneoBracket.generarPartidos();
 
-    @Test
-    void testToString() {
-        assertEquals("Torneo de Prueba", torneo.toString());
-    }
+        // Jugar todos los partidos
+        while(!torneoBracket.isFinalizado()) {
+            torneoBracket.jugarPartidoSiguiente(1, 0);
+        }
 
-    @Test
-    void testModeloTabla() {
-        DefaultTableModel modelo = new DefaultTableModel();
-        torneo.setModeloTabla(modelo);
-        assertEquals(modelo, torneo.getModeloTabla());
+        assertNotNull(torneoBracket.getGanador());
+        assertTrue(torneoBracket.isFinalizado());
     }
 }

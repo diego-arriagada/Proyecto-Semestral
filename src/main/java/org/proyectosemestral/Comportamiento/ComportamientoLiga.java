@@ -73,7 +73,16 @@ public class ComportamientoLiga implements ComportamientoTorneo {
                     participantes.getLista().get(indiceP2)
             ));
         }
-        return partidos;
+
+        ArrayList<Partido> partidos1 = new ArrayList<Partido>();
+        for (int i = 0; i< totalPartidos; i++){
+            if (i%2==0){
+                partidos1.add(partidos.get(i));
+            }else {
+                partidos1.add(partidos.get(totalPartidos-i));
+            }
+        }
+        return partidos1;
     }
 
     /**
@@ -125,6 +134,10 @@ public class ComportamientoLiga implements ComportamientoTorneo {
             P2.getStats().setGoles(resultado2);
             P1.getStats().setGolesEnContra(resultado2);
             P2.getStats().setGolesEnContra(resultado1);
+        }
+        if(partidoSiguiente == partidos.size()-1){
+            torneo.setFinalizado(true);
+            torneo.setGanador(torneo.getListaParticipantes().getLista().getFirst());
         }
     }
 }

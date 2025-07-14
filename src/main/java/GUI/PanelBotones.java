@@ -161,7 +161,7 @@ public class PanelBotones extends JPanel {
             if (filaSeleccionada != -1) {
                 torneoActual.getListaParticipantes().getLista().remove(filaSeleccionada);
 
-                panelCentral.actualizarTablaLiga(torneoActual);
+                actualizarInterfaz();
 
                 JOptionPane.showMessageDialog(null,
                         "Participante eliminado",
@@ -196,11 +196,11 @@ public class PanelBotones extends JPanel {
                             "Notificación", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(null, "El torneo ya esta iniciado",
-                            "Notificacion", JOptionPane.WARNING_MESSAGE);
+                            "Advertencia", JOptionPane.WARNING_MESSAGE);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "El torneo no tiene el tamaño minimo de participantes (dos participantes)",
-                        "Notificación", JOptionPane.INFORMATION_MESSAGE);
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         }else if (torneoActual.getComportamiento() instanceof ComportamientoBracket){
             if (tamañoCorrecto && tamañoCorrectoBracket) {
@@ -212,80 +212,156 @@ public class PanelBotones extends JPanel {
                             "Notificación", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(null, "El torneo ya esta iniciado",
-                            "Notificacion", JOptionPane.WARNING_MESSAGE);
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "El torneo no tiene el tamaño adecuado de participantes (debe ser potencia de 2 mayor o igual a 2)",
-                        "Notificación", JOptionPane.INFORMATION_MESSAGE);
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 
 
     private void accionSiguientePartido(ActionEvent e) {
-
-        if(torneoActual.getIniciado()){
-            Partido partidoActual = torneoActual.getPartidos().get(torneoActual.getPartidoActual());
-            String nombre1 = partidoActual.getLocal().getNombre();
-            String nombre2 = partidoActual.getVisita().getNombre();
-
-            JDialog dialogo = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Ingresar Resultado", true);
-            dialogo.setSize(350, 180);
-            dialogo.setLocationRelativeTo(null);
-            dialogo.setLayout(new BorderLayout());
-
-            JPanel panel = new JPanel(new GridLayout(3, 2, 10, 10));
-            panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-
-            JLabel lblP1 = new JLabel(nombre1 + ":");
-            JTextField tfP1 = new JTextField();
-
-            JLabel lblP2 = new JLabel(nombre2 + ":");
-            JTextField tfP2 = new JTextField();
-
-            panel.add(lblP1);
-            panel.add(tfP1);
-            panel.add(lblP2);
-            panel.add(tfP2);
-            JButton btnGuardar = new JButton("Guardar");
-            btnGuardar.addActionListener(ev -> {
-                try {
-                    int resultado1 = Integer.parseUnsignedInt(tfP1.getText().trim());
-                    int resultado2 = Integer.parseUnsignedInt(tfP2.getText().trim());
-                    System.out.println("b");
-
-                    torneoActual.jugarPartidoSiguiente(resultado1,resultado2);
-                    if (torneoActual.getComportamiento() instanceof ComportamientoLiga){
-                        panelCentral.actualizarTablaLiga(torneoActual);
-                    }else if(torneoActual.getComportamiento() instanceof ComportamientoBracket){
-                        panelCentral.actualizarTablaBracket(torneoActual);
-                    }
-                    System.out.println("c");
-                    panelCentral.actualizarTablaCalendario();
-
-
-
-                    dialogo.dispose();
-                    JOptionPane.showMessageDialog(this, "Resultado guardado correctamente",
-                            "Resultado", JOptionPane.INFORMATION_MESSAGE);
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(dialogo, "Debes ingresar números válidos.",
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            });
-
-            JPanel panelBoton = new JPanel();
-            panelBoton.add(btnGuardar);
-
-            dialogo.add(panel, BorderLayout.CENTER);
-            dialogo.add(panelBoton, BorderLayout.SOUTH);
-
-            dialogo.setVisible(true);
-        } else{
-            JOptionPane.showMessageDialog(this, "El torneo no ha iniciado aun",
-                    "Error", JOptionPane.INFORMATION_MESSAGE);
+        // Verificar si hay partidos disponibles
+        if (torneoActual.getPartidos() == null || torneoActual.getPartidos().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No hay partidos programados",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
 
+        // Verificar si el torneo ha finalizado
+        if (torneoActual.isFinalizado()) {
+            JOptionPane.showMessageDialog(this, "El torneo ha finalizado",
+                    "Información", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        // Obtener el partido actual
+        Partido partidoActual = torneoActual.getPartidos().get(torneoActual.getPartidoActual());
+        String nombre1 = partidoActual.getLocal().getNombre();
+        String nombre2 = partidoActual.getVisita().getNombre();
+
+        // Crear diálogo para ingresar resultados
+        JDialog dialogo = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Ingresar Resultado", true);
+        dialogo.setSize(350, 180);
+        dialogo.setLocationRelativeTo(null);
+        dialogo.setLayout(new BorderLayout());
+
+        JPanel panel = new JPanel(new GridLayout(3, 2, 10, 10));
+        panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+
+        JLabel lblP1 = new JLabel(nombre1 + ":");
+        JTextField tfP1 = new JTextField();
+
+        JLabel lblP2 = new JLabel(nombre2 + ":");
+        JTextField tfP2 = new JTextField();
+
+        panel.add(lblP1);
+        panel.add(tfP1);
+        panel.add(lblP2);
+        panel.add(tfP2);
+
+        JButton btnGuardar = new JButton("Guardar");
+        btnGuardar.addActionListener(ev -> {
+            try {
+                int resultado1 = Integer.parseUnsignedInt(tfP1.getText().trim());
+                int resultado2 = Integer.parseUnsignedInt(tfP2.getText().trim());
+
+                // Manejo de empates en torneos de bracket
+                if (torneoActual.getComportamiento() instanceof ComportamientoBracket && resultado1 == resultado2) {
+                    manejarEmpateBracket(partidoActual, resultado1, resultado2, dialogo);
+                } else {
+                    // Jugar partido normal
+                    torneoActual.jugarPartidoSiguiente(resultado1, resultado2);
+                    actualizarInterfaz();
+                    if(torneoActual.isFinalizado()){
+                        Participante ganador = torneoActual.getGanador();
+                        JOptionPane.showMessageDialog(null, "Torneo finalizado, el ganador es: "+ ganador.getNombre(),
+                                "Torneo Finalizado", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                    dialogo.dispose();
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(dialogo, "Ingrese números válidos",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        JPanel panelBoton = new JPanel();
+        panelBoton.add(btnGuardar);
+
+        dialogo.add(panel, BorderLayout.CENTER);
+        dialogo.add(panelBoton, BorderLayout.SOUTH);
+        dialogo.setVisible(true);
+    }
+
+    private void manejarEmpateBracket(Partido partido, int resultado1, int resultado2, JDialog dialogoPadre) {
+        String nombre1 = partido.getLocal().getNombre();
+        String nombre2 = partido.getVisita().getNombre();
+
+        JDialog dialogoPenales = new JDialog(dialogoPadre, "Ingresar Resultado De Penales", true);
+        dialogoPenales.setSize(350, 180);
+        dialogoPenales.setLocationRelativeTo(dialogoPadre);
+        dialogoPenales.setLayout(new BorderLayout());
+
+        JPanel panelPenales = new JPanel(new GridLayout(3, 2, 10, 10));
+        panelPenales.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+
+        JLabel lblP1Penales = new JLabel(nombre1 + " (penales):");
+        JTextField tfP1Penales = new JTextField();
+
+        JLabel lblP2Penales = new JLabel(nombre2 + " (penales):");
+        JTextField tfP2Penales = new JTextField();
+
+        panelPenales.add(lblP1Penales);
+        panelPenales.add(tfP1Penales);
+        panelPenales.add(lblP2Penales);
+        panelPenales.add(tfP2Penales);
+
+        JButton btnGuardarPenales = new JButton("Guardar");
+        btnGuardarPenales.addActionListener(e -> {
+            try {
+                int resultado1Penales = Integer.parseUnsignedInt(tfP1Penales.getText().trim());
+                int resultado2Penales = Integer.parseUnsignedInt(tfP2Penales.getText().trim());
+
+                if (resultado1Penales == resultado2Penales) {
+                    JOptionPane.showMessageDialog(null, "No puede haber empate en penales",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    // Usar el resultado de los penales como marcador final
+                    torneoActual.jugarPartidoSiguiente(resultado1Penales,resultado2Penales);
+                    actualizarInterfaz();
+
+                    if(torneoActual.isFinalizado()){
+                        Participante ganador = torneoActual.getGanador();
+                        JOptionPane.showMessageDialog(null, "Torneo finalizado, el ganador es: "+ ganador.getNombre(),
+                                "Torneo Finalizado", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                    dialogoPenales.dispose();
+                    dialogoPadre.dispose();
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(dialogoPenales, "Ingrese números válidos",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        JPanel panelBotonPenales = new JPanel();
+        panelBotonPenales.add(btnGuardarPenales);
+
+        dialogoPenales.add(panelPenales, BorderLayout.CENTER);
+        dialogoPenales.add(panelBotonPenales, BorderLayout.SOUTH);
+        dialogoPenales.setVisible(true);
+    }
+
+    private void actualizarInterfaz() {
+        if (torneoActual.getComportamiento() instanceof ComportamientoLiga) {
+            panelCentral.actualizarTablaLiga(torneoActual);
+        } else if (torneoActual.getComportamiento() instanceof ComportamientoBracket) {
+            panelCentral.actualizarTablaBracket(torneoActual);
+        }
+        panelCentral.actualizarTablaCalendario();
     }
 
     private void accionDatosParticipante(ActionEvent e) {

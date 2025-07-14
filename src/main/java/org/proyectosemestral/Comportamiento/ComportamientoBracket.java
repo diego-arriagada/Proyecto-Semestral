@@ -72,9 +72,9 @@ public class ComportamientoBracket implements ComportamientoTorneo {
      */
     @Override
     public void jugarPartidoSiguiente(Torneo torneo, ArrayList<Partido> partidos, int partidoPorJugar, int resultado1, int resultado2) {
-
-        if (debeGenerarNuevaFase(partidos, partidoPorJugar)) {
-            generarSiguienteFase(torneo, partidos);
+        // Verificar primero si el partido existe
+        if (torneo.isFinalizado()) {
+            throw new IllegalStateException("El torneo ya ha finalizado");
         }
 
         if (partidoPorJugar >= partidos.size()) {
@@ -83,16 +83,20 @@ public class ComportamientoBracket implements ComportamientoTorneo {
 
         Partido partidoActual = partidos.get(partidoPorJugar);
 
-        if (partidoActual.getGanador() != null) {
+        if (partidoActual.getPartidoJugado()) {
             throw new IllegalStateException("Este partido ya ha sido jugado");
         }
 
+        // Jugar el partido
         partidoActual.setGolesLocal(resultado1);
         partidoActual.setGolesVisitante(resultado2);
         partidoActual.jugarPartido();
         partidoActual.setGanador();
 
-        // Si es necesario generar nuevos partidos (siguiente fase)
+        // Verificar si debemos generar nueva fase
+        if (debeGenerarNuevaFase(partidos, partidoPorJugar)) {
+            generarSiguienteFase(torneo, partidos);
+        }
     }
     /** Verifica si es necesario generar una nueva fase del torneo.
      * Esto ocurre cuando todos los partidos de la fase actual han sido jugados.
@@ -102,9 +106,6 @@ public class ComportamientoBracket implements ComportamientoTorneo {
      * @return true si se debe generar una nueva fase, false en caso contrario.
      */
     private boolean debeGenerarNuevaFase(ArrayList<Partido> partidos, int partidoActual) {
-        // Verifica si todos los partidos de la fase actual han sido jugados
-        System.out.println("a");
-        int partidosPorFase = partidos.size() - partidoActual;
         for (int i = partidoActual; i < partidos.size(); i++) {
             if (partidos.get(i).getGanador() == null) {
                 return false;
@@ -130,8 +131,9 @@ public class ComportamientoBracket implements ComportamientoTorneo {
         }
 
 
-        if (ganadores.size() == 1) {
-            System.out.println("Campeón: " + ganadores.get(0).getNombre());
+        if (ganadores.size() == torneo.getListaParticipantes().getLista().size()-1) {
+            torneo.setFinalizado(true);
+            torneo.setGanador(ganadores.getLast());
             return;
         }
 
@@ -141,5 +143,24 @@ public class ComportamientoBracket implements ComportamientoTorneo {
             Participante visitante = ganadores.get(2 * i + 1);
             torneo.getPartidos().add(new Partido(local, visitante));
         }
+        ganadores.clear();
     }
+
+    // Métodos auxiliares
+    private int obtenerInicioFaseActual(Torneo torneo, ArrayList<Partido> partidos) {
+        if (torneo.getPartidoActual() == 0) {
+            return 0; // Primera fase
+        }
+        // Para fases posteriores, buscamos desde el último partido generado
+        return partidos.size() - (torneo.getPartidoActual() - partidos.size());
+    }
+
+    private void generarPartidosNuevaFase(Torneo torneo, ArrayList<Participante> ganadores) {
+        for (int i = 0; i < ganadores.size(); i += 2) {
+            if (i+1 < ganadores.size()) {
+                torneo.getPartidos().add(new Partido(ganadores.get(i), ganadores.get(i+1)));
+            }
+        }
+    }
+
 }

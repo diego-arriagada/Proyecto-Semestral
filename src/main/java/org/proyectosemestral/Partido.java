@@ -1,6 +1,8 @@
 package org.proyectosemestral;
 
 
+import org.proyectosemestral.Decoradores.ParticipanteBracket;
+
 /** Clase que representa un partido de futbol entre dos equipos participantes.
  *
  * @author Diego Arriagada
@@ -16,6 +18,7 @@ public class Partido{
     private boolean ganadorLocal;
     private boolean partidoJugado;
     private Participante ganador;
+    private boolean empate;
     //true si gana el local, false si gana el visitante
     public Partido(Participante p1,Participante p2){
         this.p1 = p1;
@@ -51,9 +54,16 @@ public class Partido{
         // Determinamos el ganador
         if (golesLocal > golesVisitante) {
             this.ganadorLocal = true;
+            if(p2 instanceof ParticipanteBracket){
+                ((ParticipanteBracket) p2).eliminar();
+            }
         } else if (golesLocal < golesVisitante) {
             this.ganadorLocal = false;
-        } else { //falta definir que pasa en empate
+            if(p1 instanceof ParticipanteBracket){
+                ((ParticipanteBracket) p1).eliminar();
+            }
+        } else {
+            this.empate = true;
 
         }
     }
@@ -76,5 +86,11 @@ public class Partido{
         else{
             return p2;
         }
+    }
+    public void setEmpate(boolean b){
+        this.empate = b;
+    }
+    public boolean getEmpate(){
+        return empate;
     }
 }

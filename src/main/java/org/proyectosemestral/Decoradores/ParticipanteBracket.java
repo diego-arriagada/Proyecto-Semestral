@@ -12,7 +12,7 @@ import org.proyectosemestral.Participante;
  * @version 1.0
  */
 public class ParticipanteBracket extends DecoradorParticipante{
-    private Boolean eliminado;
+    public Boolean eliminado;
 
     public ParticipanteBracket(Participante participante){
         super(participante);
@@ -23,6 +23,9 @@ public class ParticipanteBracket extends DecoradorParticipante{
         if(eliminado = false){
             this.eliminado = true;
         }
+    }
+    public boolean getEliminado(){
+        return eliminado;
     }
 
 

@@ -1,6 +1,8 @@
 package org.proyectosemestral;
 
+import GUI.PanelBotones;
 import org.proyectosemestral.Comportamiento.ComportamientoTorneo;
+import org.proyectosemestral.Decoradores.ParticipanteLiga;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -26,9 +28,12 @@ public class Torneo{
     private Lista<Participante> listaParticipantes;
     private ArrayList<Partido> partidos;
     private int partidoActual;
+    private Partido partidoActualP;
     private DefaultTableModel modeloTabla;
     private DefaultTableModel modeloCalendario;
     private int fase;
+    private boolean finalizado;
+    private Participante ganador;
     /** Constructor de la clase Torneo.
      *
      * @param nombreTorneo Nombre del torneo.
@@ -40,8 +45,10 @@ public class Torneo{
         this.iniciado = false;
         this.partidosGenerados = false;
         this.partidoActual = 0;
+        this.partidoActualP = null;
         this.fase = 0;
         listaParticipantes = new Lista();
+        this.ganador = null;
     }
 
     /** Metodo para generar los partidos del torneo.
@@ -185,5 +192,24 @@ public class Torneo{
 
     public DefaultTableModel getModeloCalendario(){
         return modeloCalendario;
+    }
+
+    public boolean isFinalizado() {
+        return finalizado;
+    }
+
+    public void setFinalizado(boolean finalizado) {
+        this.finalizado = finalizado;
+    }
+
+    public void setGanador(Participante p){
+        this.ganador = p;
+    }
+    public Participante getGanador(){
+        return ganador;
+    }
+
+    public Partido getPartidoActualP(){
+        return partidos.get(partidoActual-1);
     }
 }
