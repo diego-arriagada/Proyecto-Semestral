@@ -143,24 +143,5 @@ public class ComportamientoBracket implements ComportamientoTorneo {
             Participante visitante = ganadores.get(2 * i + 1);
             torneo.getPartidos().add(new Partido(local, visitante));
         }
-        ganadores.clear();
     }
-
-    // Métodos auxiliares
-    private int obtenerInicioFaseActual(Torneo torneo, ArrayList<Partido> partidos) {
-        if (torneo.getPartidoActual() == 0) {
-            return 0; // Primera fase
-        }
-        // Para fases posteriores, buscamos desde el último partido generado
-        return partidos.size() - (torneo.getPartidoActual() - partidos.size());
-    }
-
-    private void generarPartidosNuevaFase(Torneo torneo, ArrayList<Participante> ganadores) {
-        for (int i = 0; i < ganadores.size(); i += 2) {
-            if (i+1 < ganadores.size()) {
-                torneo.getPartidos().add(new Partido(ganadores.get(i), ganadores.get(i+1)));
-            }
-        }
-    }
-
 }
