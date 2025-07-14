@@ -15,14 +15,16 @@
 Este sistema está diseñado para facilitar la organizacíon de torneos deportivos o de juegos. Permitirá a un organizador definir las características del torneo, como el nombre, la disciplina (ej. fútbol, ajedrez, videojuegos), las fechas y un formato principal (como eliminatoria directa, eliminatorio doble, liga simple...). Se podrán inscribir participantes, ya sean jugadores individuales o equipos, almacenando información básica como nombres y datos de contacto. El sistema deberá ser capaz de generar un calendario de enfrentamientos o un bracket inicial basado en los inscritos y el formato. Durante el torneo, se registrarán los resultados de cada enfrentamiento, lo que actualizará automáticamente las posiciones, el avance en el bracket o las tablas de clasificación. Los usuarios podrán visualizar el estado actual del torneo, los próximos encuentros y las estadísticas generales.
 
 # Diagrama de Casos de Uso
-[diagrama]
+![img.png](img.png)
 
 # Captura de Interfaz
-[Interfaz]
+![img_1.png](img_1.png)
 
 # Diagrama de Clases UML
-[Diagrama de Clases]
-
+## Parte Logica
+![img_2.png](img_2.png)
+## Parte Grafica
+![img_3.png](img_3.png)
 # Patrones de Diseño Utilizados
 
 ## Patrón Strategy
