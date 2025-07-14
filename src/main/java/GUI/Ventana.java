@@ -122,7 +122,7 @@ public class Ventana extends JFrame {
 
     private void mostrarAcercaDe() {
         JOptionPane.showMessageDialog(this,
-                "Sistema de Gestión de Torneos\nVersión 1.0\n© 2023",
+                "Sistema de Gestión de Torneos\nVersión 1.0\nProyecto semestral Desarrollo Orientado a Objeto\nDiego Arriagada\nMatias Catril\nVictor Galaz",
                 "Acerca de",
                 JOptionPane.INFORMATION_MESSAGE);
     }

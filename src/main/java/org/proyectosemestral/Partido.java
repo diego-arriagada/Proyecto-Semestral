@@ -14,7 +14,9 @@ public class Partido{
     private int golesLocal;
     private int golesVisitante;
     private boolean ganadorLocal;
-    private boolean partidoJugado;//true si gana el local, false si gana el visitante
+    private boolean partidoJugado;
+    private Participante ganador;
+    //true si gana el local, false si gana el visitante
     public Partido(Participante p1,Participante p2){
         this.p1 = p1;
         this.p2 = p2;
@@ -65,10 +67,13 @@ public class Partido{
     }
 
     public Participante getGanador(){
+        if (partidoJugado == false){
+            return null;
+        }
         if (ganadorLocal == true){
             return p1;
         }
-        else {
+        else{
             return p2;
         }
     }

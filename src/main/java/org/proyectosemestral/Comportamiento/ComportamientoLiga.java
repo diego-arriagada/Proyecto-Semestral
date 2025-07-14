@@ -4,6 +4,7 @@ import org.proyectosemestral.Decoradores.ParticipanteLiga;
 import org.proyectosemestral.Participante;
 import org.proyectosemestral.Lista;
 import org.proyectosemestral.Partido;
+import org.proyectosemestral.Torneo;
 
 import java.util.Collections;
 import java.util.List;
@@ -84,7 +85,7 @@ public class ComportamientoLiga implements ComportamientoTorneo {
      * @param resultado2 Resultado del segundo participante (visitante).
      */
     @Override
-    public void jugarPartidoSiguiente(ArrayList<Partido> partidos,int partidoSiguiente,int resultado1,int resultado2){
+    public void jugarPartidoSiguiente(Torneo torneo, ArrayList<Partido> partidos, int partidoSiguiente, int resultado1, int resultado2){
         Partido partidoActual = partidos.get(partidoSiguiente);
         partidoActual.setGolesLocal(resultado1);
         partidoActual.setGolesVisitante(resultado2);

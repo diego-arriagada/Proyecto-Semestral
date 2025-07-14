@@ -49,8 +49,8 @@ public class PanelBotones extends JPanel {
         btnSiguientePartido = new JButton("Partido Siguiente");
         btnSiguientePartido.setToolTipText("Abre la ventana para ingresar resultado del siguiente partido");
 
-        btnDatosParticipante = new JToggleButton("Modo Eliminatorio");
-        btnDatosParticipante.setToolTipText("Cambiar entre vista de Liga y Eliminatoria");
+        btnDatosParticipante = new JToggleButton("Datos participante");
+        btnDatosParticipante.setToolTipText("Despliega los datos del participante seleccionado");
     }
 
     private void setupLayout() {
@@ -121,7 +121,8 @@ public class PanelBotones extends JPanel {
                     torneoActual.añadirParticipante(p);
                     panelCentral.actualizarTablaLiga(torneoActual);
                 }else{
-
+                    torneoActual.añadirParticipante(p);
+                    panelCentral.actualizarTablaBracket(torneoActual);
                 }
 
                 dialogo.dispose();
@@ -182,26 +183,47 @@ public class PanelBotones extends JPanel {
 
     private void accionComenzarTorneo(ActionEvent e) {
         Boolean tamañoCorrecto = torneoActual.getListaParticipantes().getLista().size() >= 2;
-        if(tamañoCorrecto){
-            boolean iniciado = torneoActual.iniciarTorneo();
-            if (iniciado) {
-                torneoActual.generarPartidos();
-                panelCentral.actualizarTablaCalendario();
-                JOptionPane.showMessageDialog(this, "Torneo iniciado correctamente",
-                        "Notificación", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(this, "El torneo ya esta iniciado",
-                        "Notificacion", JOptionPane.WARNING_MESSAGE);
-            }
-        }else{
-            JOptionPane.showMessageDialog(this, "El torneo no tiene el tamaño minimo de participantes (dos participantes)",
-                    "Notificación", JOptionPane.INFORMATION_MESSAGE);
-        }
+        Boolean tamañoCorrectoBracket = ((torneoActual.getListaParticipantes().getLista().size() & torneoActual.getListaParticipantes().getLista().size()-1) == 0);
+        if (torneoActual.getComportamiento() instanceof ComportamientoLiga) {
 
+
+            if (tamañoCorrecto) {
+                boolean iniciado = torneoActual.iniciarTorneo();
+                if (iniciado) {
+                    torneoActual.generarPartidos();
+                    panelCentral.actualizarTablaCalendario();
+                    JOptionPane.showMessageDialog(null, "Torneo iniciado correctamente",
+                            "Notificación", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, "El torneo ya esta iniciado",
+                            "Notificacion", JOptionPane.WARNING_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "El torneo no tiene el tamaño minimo de participantes (dos participantes)",
+                        "Notificación", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }else if (torneoActual.getComportamiento() instanceof ComportamientoBracket){
+            if (tamañoCorrecto && tamañoCorrectoBracket) {
+                boolean iniciado = torneoActual.iniciarTorneo();
+                if (iniciado) {
+                    torneoActual.generarPartidos();
+                    panelCentral.actualizarTablaCalendario();
+                    JOptionPane.showMessageDialog(null, "Torneo iniciado correctamente",
+                            "Notificación", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, "El torneo ya esta iniciado",
+                            "Notificacion", JOptionPane.WARNING_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "El torneo no tiene el tamaño adecuado de participantes (debe ser potencia de 2 mayor o igual a 2)",
+                        "Notificación", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
     }
 
 
     private void accionSiguientePartido(ActionEvent e) {
+
         if(torneoActual.getIniciado()){
             Partido partidoActual = torneoActual.getPartidos().get(torneoActual.getPartidoActual());
             String nombre1 = partidoActual.getLocal().getNombre();
@@ -225,16 +247,20 @@ public class PanelBotones extends JPanel {
             panel.add(tfP1);
             panel.add(lblP2);
             panel.add(tfP2);
-
             JButton btnGuardar = new JButton("Guardar");
             btnGuardar.addActionListener(ev -> {
                 try {
                     int resultado1 = Integer.parseUnsignedInt(tfP1.getText().trim());
                     int resultado2 = Integer.parseUnsignedInt(tfP2.getText().trim());
-
+                    System.out.println("b");
 
                     torneoActual.jugarPartidoSiguiente(resultado1,resultado2);
-                    panelCentral.actualizarTablaLiga(torneoActual);
+                    if (torneoActual.getComportamiento() instanceof ComportamientoLiga){
+                        panelCentral.actualizarTablaLiga(torneoActual);
+                    }else if(torneoActual.getComportamiento() instanceof ComportamientoBracket){
+                        panelCentral.actualizarTablaBracket(torneoActual);
+                    }
+                    System.out.println("c");
                     panelCentral.actualizarTablaCalendario();
 
 

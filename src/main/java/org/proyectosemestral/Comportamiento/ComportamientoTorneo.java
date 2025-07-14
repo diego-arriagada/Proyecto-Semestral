@@ -5,6 +5,7 @@ package org.proyectosemestral.Comportamiento;
 import org.proyectosemestral.Lista;
 import org.proyectosemestral.Participante;
 import org.proyectosemestral.Partido;
+import org.proyectosemestral.Torneo;
 
 import java.util.ArrayList;
 
@@ -23,5 +24,5 @@ import java.util.ArrayList;
  */
 public interface ComportamientoTorneo {
     ArrayList<Partido> generarPartidos(Lista<Participante> participantes,ArrayList<Partido> partidos);
-    void jugarPartidoSiguiente(ArrayList<Partido> partidos,int partidoActual,int resultado1,int resultado2);
+    void jugarPartidoSiguiente(Torneo torneo, ArrayList<Partido> partidos, int partidoActual, int resultado1, int resultado2);
 }

@@ -66,11 +66,16 @@ public class PanelCentral extends JPanel {
 
         // Pestaña de clasificación
         tabla = new JTable(crearModeloTablaLiga(torneoActual));
+        tabla.getTableHeader().setResizingAllowed(false);
+        tabla.getTableHeader().setReorderingAllowed(false);
         JScrollPane scrollClasificacion = new JScrollPane(tabla);
         tabbedPane.addTab("Clasificación", scrollClasificacion);
 
+
         // Pestaña de calendario
         tablaCalendario = new JTable(crearTablaCalendario(torneoActual));
+        tablaCalendario.getTableHeader().setResizingAllowed(false);
+        tablaCalendario.getTableHeader().setReorderingAllowed(false);
         JScrollPane scrollCalendario = new JScrollPane(tablaCalendario);
         tabbedPane.addTab("Calendario", scrollCalendario);
 
@@ -100,6 +105,27 @@ public class PanelCentral extends JPanel {
         this.torneoActual.setModeloTabla(modelo);
         return modelo;
     }
+
+    private DefaultTableModel crearModeloTablaBracket(Torneo torneo) {
+        String[] columnas = {"Nombre"};
+        DefaultTableModel modelo = new DefaultTableModel(columnas, 0) {
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        // Agrega los participantes actuales
+        for (Participante p : torneo.getListaParticipantes().getLista()) {
+            if(p != null){
+                Object[] fila = {p.getNombre()};
+                modelo.addRow((fila));
+            }
+
+        }
+        this.torneoActual.setModeloTabla(modelo);
+        return modelo;
+    }
+
     public void actualizarTablaLiga(Torneo torneo) {
         DefaultTableModel modelo = (DefaultTableModel) getTabla().getModel();
         // Limpia la tabla antes de llenarla de nuevo
@@ -122,13 +148,47 @@ public class PanelCentral extends JPanel {
                 modelo.addRow(fila);
             } else {
                 // Si el participante no es de tipo Liga, muestra solo datos básicos
-                Object[] fila = {p.getNombre(), "-", "-"};
+                Object[] fila = {p.getNombre()};
                 modelo.addRow(fila);
             }
         }
     }
 
+    public void actualizarTablaBracket(Torneo torneo) {
+        DefaultTableModel modelo = (DefaultTableModel) getTabla().getModel();
+        // Limpia la tabla antes de llenarla de nuevo
+        modelo.setRowCount(0);
+        for (Participante p : torneo.getListaParticipantes().getLista()) {
+            if (p != null) {
+                Object[] fila = {p.getNombre()
+                };
+                modelo.addRow(fila);
+            }
+        }
+    }
+
+
     private DefaultTableModel crearTablaCalendario(Torneo torneo) {
+        String[] columnas = {"Jornada","Local","Resultado","Visitante"};
+        DefaultTableModel modelo = new DefaultTableModel(columnas, 0) {
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        int i = 1;
+        if(torneoActual.getPartidos()!=null) {
+            for (Partido p : torneoActual.getPartidos()) {
+                Object[] fila = {i, p.getLocal().getNombre(), p.getGolesLocal() + "-" + p.getGolesVisitante(), p.getVisita().getNombre()};
+                modelo.addRow(fila);
+                i++;
+            }
+        }
+        torneoActual.setModeloCalendario(modelo);
+        return modelo;
+    }
+
+    private DefaultTableModel crearTablaBracket(Torneo torneo) {
         String[] columnas = {"Jornada","Local","Resultado","Visitante"};
         DefaultTableModel modelo = new DefaultTableModel(columnas, 0) {
             public boolean isCellEditable(int row, int column) {
@@ -155,19 +215,42 @@ public class PanelCentral extends JPanel {
 
         int i = 1;
         for( Partido p : torneoActual.getPartidos()){
-            Object[] fila = {i,p.getLocal().getNombre(),p.getGolesLocal() + "-" + p.getGolesVisitante(),p.getVisita().getNombre()};
-            modelo.addRow(fila);
-            i++;
+            if(p.getPartidoJugado()){
+                Object[] fila = {i, p.getLocal().getNombre(), p.getGolesLocal() + "-" + p.getGolesVisitante(), p.getVisita().getNombre()};
+                modelo.addRow(fila);
+                i++;
+            }else{
+                Object[] fila = {i, p.getLocal().getNombre(),"Pendiente", p.getVisita().getNombre()};
+                modelo.addRow(fila);
+                i++;
+            }
         }
-    }
-
-    private JPanel crearPanelBracket() {
+    }    private JPanel crearPanelBracket() {
+        // Panel principal con BorderLayout
         JPanel panel = new JPanel(new BorderLayout());
-        JTextArea areaBracket = new JTextArea(generarTextoBracket());
-        areaBracket.setEditable(false);
-        panel.add(new JScrollPane(areaBracket), BorderLayout.CENTER);
-        return panel;
-    }
+
+        // Nombre del torneo arriba
+        JLabel nombreTorneo = new JLabel(torneoActual.toString());
+        nombreTorneo.setHorizontalAlignment(SwingConstants.CENTER);
+        panel.add(nombreTorneo, BorderLayout.NORTH);
+
+        // Pestañas
+        JTabbedPane tabbedPane = new JTabbedPane();
+
+        // Pestaña de equipos inscritos
+        tabla = new JTable(crearModeloTablaBracket(torneoActual));
+        JScrollPane scrollClasificacion = new JScrollPane(tabla);
+        tabbedPane.addTab("Equipos Inscritos", scrollClasificacion);
+
+        // Pestaña de calendario
+        tablaCalendario = new JTable(crearTablaCalendario(torneoActual));
+        JScrollPane scrollCalendario = new JScrollPane(tablaCalendario);
+        tabbedPane.addTab("Calendario", scrollCalendario);
+
+        // Añadir pestañas al centro del panel
+        panel.add(tabbedPane, BorderLayout.CENTER);
+
+        return panel;    }
 
     private String generarTextoBracket() {
         return "Ronda 1:\nEquipo A vs Equipo B\nEquipo C vs Equipo D\n\n" +

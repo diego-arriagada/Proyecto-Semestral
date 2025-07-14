@@ -28,7 +28,7 @@ public class Torneo{
     private int partidoActual;
     private DefaultTableModel modeloTabla;
     private DefaultTableModel modeloCalendario;
-
+    private int fase;
     /** Constructor de la clase Torneo.
      *
      * @param nombreTorneo Nombre del torneo.
@@ -40,6 +40,7 @@ public class Torneo{
         this.iniciado = false;
         this.partidosGenerados = false;
         this.partidoActual = 0;
+        this.fase = 0;
         listaParticipantes = new Lista();
     }
 
@@ -70,7 +71,7 @@ public class Torneo{
      */
     public void jugarPartidoSiguiente(int resultado1, int resultado2){
         if(iniciado){
-            comportamiento.jugarPartidoSiguiente(partidos,partidoActual,resultado1,resultado2);
+            comportamiento.jugarPartidoSiguiente(this, partidos,partidoActual,resultado1,resultado2);
             this.partidoActual++;
         }
     }
@@ -176,6 +177,10 @@ public class Torneo{
 
     public void setModeloCalendario(DefaultTableModel modeloCalendario){
         this.modeloCalendario = modeloCalendario;
+    }
+
+    public void aumentarPartidoActual(){
+        this.partidoActual++;
     }
 
     public DefaultTableModel getModeloCalendario(){
